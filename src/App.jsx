@@ -2,14 +2,23 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <h1 style={{ fontSize: '2rem' }}>Probando la fuente ANKISH</h1>
-      <p style={{ fontSize: '1.5rem' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, laboriosam.</p>
-      <h2 style={{ fontSize: '3rem' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, laboriosam.</h2>
-      <strong><h1 style={{ fontSize: '3rem' }}>h HLorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, laboriosam.</h1></strong>
+      {/* Texto por defecto en BL Melody Regular */}
+      <p>Este texto usa el default (BL Melody Regular) por defecto</p>
+      
+      {/* Variantes de BL Melody */}
+      <h1 className="bl-semi">Título en Semi Bold</h1>
+      <p className='bl-semi'>Texto en Semi Bold</p>
+      <p className="bl-book">Texto en Book</p>
+      
+      {/* Variantes de BL Melody Bold */}
+      <h1 className="bl-bold">Título en Bold</h1>
+      <p className="bl-bold">Texto en Bold</p>
+      
+      {/* Variantes de ANKISH */}
+      <p>Texto normal con <span className="ank">palabras en ANKISH</span></p>
+      <p className="ank-caps">Este texto completo en ANKISH mayúsculas</p>
     </>
   )
 }

@@ -1,3 +1,4 @@
+/* Fuentes existentes */
 @font-face {
   font-family: 'ANKISH';
   src: url('./assets/Font/ANKISH-V2.otf') format('opentype');
@@ -6,12 +7,96 @@
   font-display: swap;
 }
 
-#root {
-  font-family: 'ANKISH', Arial, sans-serif;
+/* Agregar BL Melody Book */
+@font-face {
+  font-family: 'BL Melody';
+  src: url('./assets/Font/BL Melody/BLMelody-Book.woff2') format('woff2'),
+       url('./assets/Font/BL Melody/BLMelody-Book.woff') format('woff'),
+       url('./assets/Font/BL Melody/BLMelody-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-
-h1, h2, p {
-  font-family: 'ANKISH', Arial, sans-serif;
-  color: #333;
+/* BL Melody Regular */
+@font-face {
+  font-family: 'BL Melody';
+  src: url('./assets/Font/BL Melody/BLMelody-Regular.woff2') format('woff2'),
+       url('./assets/Font/BL Melody/BLMelody-Regular.woff') format('woff'),
+       url('./assets/Font/BL Melody/BLMelody-Regular.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }
+
+/* BL Melody SemiBold */
+@font-face {
+  font-family: 'BL Melody';
+  src: url('./assets/Font/BL Melody/BLMelody-SemiBold.woff2') format('woff2'),
+       url('./assets/Font/BL Melody/BLMelody-SemiBold.woff') format('woff'),
+       url('./assets/Font/BL Melody/BLMelody-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* BL Melody Bold */
+@font-face {
+  font-family: 'BL Melody';
+  src: url('./assets/Font/BL Melody/BLMelody-Bold.woff2') format('woff2'),
+       url('./assets/Font/BL Melody/BLMelody-Bold.woff') format('woff'),
+       url('./assets/Font/BL Melody/BLMelody-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'BL Melody', Arial, sans-serif;
+  font-weight: 500;
+}
+
+.bl-book {
+  font-family: 'BL Melody';
+  font-weight: 400;
+}
+
+.bl-regular {
+  font-family: 'BL Melody';
+  font-weight: 500;
+}
+
+.bl-semi {
+  font-family: 'BL Melody';
+  font-weight: 600;
+}
+
+.bl-bold {
+  font-family: 'BL Melody';
+  font-weight: 700;
+}
+
+.ank {
+  font-family: 'ANKISH';
+}
+
+.ank-caps {
+  font-family: 'ANKISH';
+  text-transform: uppercase;
+}
+
+/**
+ * GUÍA PARA EL USO DE LAS FUENTES
+ * ---------------
+ * Default: BL Melody Regular (no necesita clase, ez)
+ * 
+ * BL Melody esta es la base:
+ * - "bl-book"    -> BL Melody Book
+ * - "bl-regular" -> BL Melody Regular (default)
+ * - "bl-semi"    -> BL Melody Semi Bold
+ * - "bl-bold"    -> BL Melody Bold
+ * 
+ * ANKISH descartable pero util en ciertas partes:
+ * - "ank"      -> ANKISH normal
+ * - "ank-caps" -> ANKISH en mayúsculas
+ */
