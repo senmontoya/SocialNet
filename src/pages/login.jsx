@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar.jsx";
-import LoginSection from "../components/loginSection.jsx"
 import { supabase } from "../supabaseClient.js";
+import '../style/login.css'
 
 function Login () {
     const [email, setEmail] = useState('');
