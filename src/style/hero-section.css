@@ -1,10 +1,10 @@
-.login-section {
+.hero-section {
     background: url(../assets/img/background.avif) no-repeat center;
     background-size: cover;
     width: 100%;
 }
 
-.login-section::before {
+.hero-section::before {
     background-color: rgba(0,0,0,0.6);
     content: "";
     position: absolute;
@@ -14,8 +14,9 @@
     left: 0;
 }
 
-.login-section, .container {
+.hero-section, .container {
     height: 100vh;
     z-index: 1;
     position: relative;
 }
+
