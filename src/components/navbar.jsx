@@ -1,7 +1,7 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../style/navbar.css";
-import logo from "../assets/Font/test/logo.png";
+import logo from '../assets/img/logo.png';
 
 const Navbar = () => {
     return(     
