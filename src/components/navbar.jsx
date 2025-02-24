@@ -1,14 +1,15 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "../style/navbar.css"
+import "../style/navbar.css";
+import logo from "../assets/Font/test/logo.png";
 
 const Navbar = () => {
     return(     
         <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
-                <img src="/docs/5.0/bootstrap-logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top"/>
-                SocialNet
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src={logo} alt="Logo SocialNet" width="50" height="50" class="me-2"/>
+                    <span>SocialNet</span>
                 </a>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
