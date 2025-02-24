@@ -1,0 +1,15 @@
+.background-login {
+    background: url('../assets/Font/assets/img/resumen-6-papel-pared-fondo-claro-gradiente-colores-borroso-suave-suave_792836-19460.avif');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.card-position {
+    padding-bottom: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+    max-height: 50%;
+}
