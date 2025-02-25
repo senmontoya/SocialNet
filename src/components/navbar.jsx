@@ -2,6 +2,7 @@ import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "../style/navbar.css";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
     return(
@@ -17,7 +18,7 @@ const Navbar = () => {
                    <div className="offcanvas-body">
                         <ul className="navbar-nav justify-content-center flex-grow-1 pe-3">
                             <li className="nav-item">
-                                <a className="nav-link mx-lg-2" aria-current="page" href="#">Home</a>
+                                <Link to="/" className="nav-link mx-lg-2" aria-current="page" href="#">Home</Link>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link mx-lg-2" href="#">Acerca De</a>
