@@ -81,7 +81,7 @@ function Login() {
                             </div>
 
                             <div className="d-grid">
-                                <button type="submit" className="btn bg-btn w-100">Iniciar Sesión</button>
+                                <button type="submit" className="btn btn-primary w-100">Iniciar Sesión</button>
                             </div>
 
                             <div className="row text-center">
