@@ -34,7 +34,7 @@ const Register = () => {
                 <div className="container d-flex justify-content-center align-items-center vh-100 mt-5">
                     <div className="row w-100 shadow-lg bg-white rounded-4 overflow-hidden">
                         <div className="col-lg-7 col-md-12 p-5">
-                            <h2 className="mb-4 text-center">Crea tu cuenta</h2>
+                            <h2 className="register-title text-center">Crea tu cuenta</h2>
 
                             <form>
                                 <div className="mb-3">
