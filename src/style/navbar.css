@@ -55,7 +55,7 @@
         transform: translateX(-50%);
         width: 0;
         height: 2px;
-        background-color: cornflowerblue;
+        background-color: #6495ed;
         visibility: hidden;
         transition: 0.3s ease-in-out;
     }
