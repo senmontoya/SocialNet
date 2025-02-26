@@ -8,6 +8,7 @@ import Register from './pages/register.jsx'
 import Create from './pages/CreateProfile.jsx'
 import HeroSection from './components/heroSection.jsx'
 import navbar from './components/navbar.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         <Route path='/register' element={<Register/>}/>
         <Route path='/create-profile' element={<Create/>}/>
         <Route path='/heroSection' element={<HeroSection/>}/>
+        <Route path='/Dashboard' element={<Dashboard/>}/>
         
 
       </Routes>

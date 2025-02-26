@@ -18,13 +18,18 @@ function Login() {
             password 
         });
 
-        if (error) setError(error.message);
+        if (error) {
+            setError(error.message);
+        } else {
+            window.location.href = '/dashboard'; // Redirect to dashboard on success
+        }
     };
 
     const signInWithGoogle = async () => {
         setError(null);
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
+            options: { redirectTo: window.location.origin + '/dashboard' },
         });
 
         if (error) setError(error.message);
@@ -35,7 +40,6 @@ function Login() {
             <Navbar />
             <section className="login-section">
                 <div className="container-login d-flex align-items-center justify-content-center w-100">
-                    
                     <div className="login-form-container p-5 mt-5 rounded shadow bg-light text-dark">
                         <h2 className="text-center mb-4 ank">Iniciar Sesión</h2>
                         
@@ -86,7 +90,7 @@ function Login() {
 
                             <div className="row text-center">
                               <span className="p-2"><a href="#">Recuperar Contraseña</a></span>
-                              <span>¿No tienes una cuenta? <a href="#">Regístrate</a></span> <br/>
+                              <span>¿No tienes una cuenta? <a href="/register">Regístrate</a></span>
                             </div>
                         </form>
 
@@ -100,7 +104,6 @@ function Login() {
                             Iniciar sesión con Google
                         </button>
                     </div>
-
                 </div>
             </section>
         </>
