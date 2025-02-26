@@ -23,17 +23,57 @@ const Register = () => {
   const navigate = useNavigate();
 
   const countryOptions = [
-    { name: "El Salvador", code: "+503", length: 8, formatExample: "7000-1234" },
-    { name: "México", code: "+52", length: 10, formatExample: "55-1234-5678" },
+    { name: "Canadá", code: "+1", length: 10, formatExample: "416-555-1234" },
     { name: "Estados Unidos", code: "+1", length: 10, formatExample: "123-456-7890" },
+    { name: "México", code: "+52", length: 10, formatExample: "55-1234-5678" },
+    { name: "Belice", code: "+501", length: 7, formatExample: "123-4567" },
+    { name: "Costa Rica", code: "+506", length: 8, formatExample: "1234-5678" },
+    { name: "El Salvador", code: "+503", length: 8, formatExample: "7000-1234" },
+    { name: "Guatemala", code: "+502", length: 8, formatExample: "1234-5678" },
+    { name: "Honduras", code: "+504", length: 8, formatExample: "1234-5678" },
+    { name: "Nicaragua", code: "+505", length: 8, formatExample: "1234-5678" },
+    { name: "Panamá", code: "+507", length: 7, formatExample: "123-4567" },
     { name: "Argentina", code: "+54", length: 10, formatExample: "11-1234-5678" },
+    { name: "Bolivia", code: "+591", length: 8, formatExample: "1234-5678" },
+    { name: "Brasil", code: "+55", length: 11, formatExample: "11-91234-5678" },
+    { name: "Chile", code: "+56", length: 9, formatExample: "9-1234-5678" },
+    { name: "Colombia", code: "+57", length: 10, formatExample: "312-345-6789" },
+    { name: "Ecuador", code: "+593", length: 9, formatExample: "9-1234-5678" },
+    { name: "Guyana", code: "+592", length: 7, formatExample: "123-4567" },
+    { name: "Paraguay", code: "+595", length: 9, formatExample: "981-234-567" },
+    { name: "Perú", code: "+51", length: 9, formatExample: "912-345-678" },
+    { name: "Surinam", code: "+597", length: 7, formatExample: "123-4567" },
+    { name: "Uruguay", code: "+598", length: 8, formatExample: "91-234-567" },
+    { name: "Venezuela", code: "+58", length: 10, formatExample: "412-345-6789" },
+    { name: "Antigua y Barbuda", code: "+1-268", length: 7, formatExample: "123-4567" },
+    { name: "Bahamas", code: "+1-242", length: 7, formatExample: "123-4567" },
+    { name: "Barbados", code: "+1-246", length: 7, formatExample: "123-4567" },
+    { name: "Cuba", code: "+53", length: 8, formatExample: "5-123-4567" },
+    { name: "Dominica", code: "+1-767", length: 7, formatExample: "123-4567" },
+    { name: "República Dominicana", code: "+1-809", length: 7, formatExample: "123-4567" },
+    { name: "Granada", code: "+1-473", length: 7, formatExample: "123-4567" },
+    { name: "Haití", code: "+509", length: 8, formatExample: "1234-5678" },
+    { name: "Jamaica", code: "+1-876", length: 7, formatExample: "123-4567" },
+    { name: "San Cristóbal y Nieves", code: "+1-869", length: 7, formatExample: "123-4567" },
+    { name: "Santa Lucía", code: "+1-758", length: 7, formatExample: "123-4567" },
+    { name: "San Vicente y las Granadinas", code: "+1-784", length: 7, formatExample: "123-4567" },
+    { name: "Trinidad y Tobago", code: "+1-868", length: 7, formatExample: "123-4567" },
+    { name: "Alemania", code: "+49", length: 10, formatExample: "151-234-5678" },
+    { name: "España", code: "+34", length: 9, formatExample: "612-345-678" },
+    { name: "Francia", code: "+33", length: 9, formatExample: "6-12-34-56-78" },
+    { name: "Italia", code: "+39", length: 10, formatExample: "312-345-6789" },
+    { name: "Reino Unido", code: "+44", length: 10, formatExample: "7123-456-789" },
+    { name: "Países Bajos", code: "+31", length: 9, formatExample: "6-1234-5678" },
+    { name: "Portugal", code: "+351", length: 9, formatExample: "912-345-678" },
+    { name: "Rusia", code: "+7", length: 10, formatExample: "912-345-6789" },
+    { name: "Suiza", code: "+41", length: 9, formatExample: "76-234-5678" },
   ];
 
   useEffect(() => {
     const checkSessionAndHandleCallback = async () => {
       const { data: sessionData, error } = await supabase.auth.getSession();
       if (error) {
-        setError(`Error getting session: ${error.message}`);
+        setError(`Error al obtener la sesión: ${error.message}`);
         return;
       }
       if (sessionData.session) {
@@ -60,15 +100,15 @@ const Register = () => {
     setError(null);
 
     if (!formData.username || !formData.email || !formData.password) {
-      setError("Please fill in all required fields.");
+      setError("Por favor, completa todos los campos obligatorios.");
       return;
     }
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long.");
+      setError("La contraseña debe tener al menos 6 caracteres.");
       return;
     }
     if (!isPhoneValid) {
-      setError(`Phone number must be ${selectedCountry.length} digits for ${selectedCountry.name}.`);
+      setError(`El número de teléfono debe tener ${selectedCountry.length} dígitos para ${selectedCountry.name}.`);
       return;
     }
 
@@ -91,54 +131,41 @@ const Register = () => {
       if (authError) {
         throw new Error(
           authError.message.includes("already registered")
-            ? "This email is already registered. Try logging in."
-            : "Could not create your account. Please try again."
+            ? "Este correo ya está registrado. Intenta iniciar sesión."
+            : "No pudimos crear tu cuenta. Por favor, intenta de nuevo."
         );
       }
-      if (!authData.user) throw new Error("There was a problem creating your account.");
+      if (!authData.user) throw new Error("Ocurrió un problema al crear tu cuenta.");
 
       const userId = authData.user.id;
 
-      // Use upsert instead of insert to avoid duplicate key errors
       const { error: registroError } = await supabase
         .from("usuarios_registro")
-        .upsert(
-          {
-            id_registro: userId,
-            nick: formData.username,
-            email: formData.email,
-            fecha_registro: new Date().toISOString(),
-          },
-          { onConflict: "id_registro" } // Specify the conflict target
-        );
+        .insert({
+          id_registro: userId,
+          nick: formData.username,
+          email: formData.email,
+          fecha_registro: new Date().toISOString(),
+        });
 
       if (registroError) {
-        throw new Error("Error saving your data in usuarios_registro: " + registroError.message);
+        throw new Error(
+          registroError.message.includes("duplicate key")
+            ? "El nombre de usuario o correo ya está en uso."
+            : "Error al guardar tus datos en usuarios_registro."
+        );
       }
 
-      // Check if the user already exists in usuarios before inserting
-      const { data: existingUsuario, error: checkUsuarioError } = await supabase
+      const { data: usuarioData, error: usuarioError } = await supabase
         .from("usuarios")
-        .select("id_usuario")
-        .eq("id_registro", userId)
+        .insert({
+          id_registro: userId,
+          telefono: `${formData.countryCode}${formData.phone}`,
+        })
+        .select()
         .single();
 
-      let usuarioData;
-      if (!existingUsuario) {
-        const { data, error: usuarioError } = await supabase
-          .from("usuarios")
-          .insert({
-            id_registro: userId,
-            telefono: `${formData.countryCode}${formData.phone}`,
-          })
-          .select()
-          .single();
-
-        if (usuarioError) throw new Error("Error saving your phone number in usuarios: " + usuarioError.message);
-        usuarioData = data;
-      } else {
-        usuarioData = existingUsuario;
-      }
+      if (usuarioError) throw new Error("Error al guardar tu número de teléfono en usuarios.");
 
       setSuccess(true);
       setFormData({ username: "", password: "", email: "", phone: "", countryCode: "+503" });
@@ -166,7 +193,7 @@ const Register = () => {
           },
         },
       });
-      if (error) throw new Error("Could not connect with Google. Please try again.");
+      if (error) throw new Error("No pudimos conectar con Google. Intenta de nuevo.");
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -182,42 +209,46 @@ const Register = () => {
       const email = user.email;
       const nick = user.user_metadata.full_name || email.split("@")[0];
 
-      // Use upsert to handle existing records
-      const { error: registroError } = await supabase
+      const { data: existingRegistro, error: checkError } = await supabase
         .from("usuarios_registro")
-        .upsert(
-          {
+        .select("id_registro")
+        .eq("id_registro", userId)
+        .single();
+
+      if (checkError && checkError.code !== "PGRST116") {
+        throw new Error("Error al verificar tu registro: " + checkError.message);
+      }
+
+      let usuarioData;
+      if (!existingRegistro) {
+        const { error: registroError } = await supabase
+          .from("usuarios_registro")
+          .insert({
             id_registro: userId,
             nick: nick,
             email: email,
             fecha_registro: new Date().toISOString(),
-          },
-          { onConflict: "id_registro" }
-        );
+          });
+        if (registroError) throw new Error("Error al guardar en usuarios_registro: " + registroError.message);
 
-      if (registroError) throw new Error("Error saving in usuarios_registro: " + registroError.message);
-
-      // Check if the user exists in usuarios before inserting
-      const { data: existingUsuario, error: checkUsuarioError } = await supabase
-        .from("usuarios")
-        .select("id_usuario")
-        .eq("id_registro", userId)
-        .single();
-
-      let usuarioData;
-      if (!existingUsuario) {
         const { data, error: usuarioError } = await supabase
           .from("usuarios")
           .insert({
             id_registro: userId,
-            telefono: "Not provided",
+            telefono: "No proporcionado",
           })
           .select()
           .single();
-        if (usuarioError) throw new Error("Error saving in usuarios: " + usuarioError.message);
+        if (usuarioError) throw new Error("Error al guardar en usuarios: " + usuarioError.message);
         usuarioData = data;
       } else {
-        usuarioData = existingUsuario;
+        const { data, error: usuarioError } = await supabase
+          .from("usuarios")
+          .select("id_usuario")
+          .eq("id_registro", userId)
+          .single();
+        if (usuarioError) throw new Error("Error al recuperar tu perfil: " + usuarioError.message);
+        usuarioData = data;
       }
 
       setSuccess(true);
@@ -230,7 +261,6 @@ const Register = () => {
     }
   };
 
-  // The rest of your JSX remains unchanged
   return (
     <>
       <Navbar />
@@ -241,8 +271,8 @@ const Register = () => {
               <h2 className="register-title text-center">Crea tu cuenta</h2>
 
               {error && <div className="alert alert-danger">{error}</div>}
-              {success && <div className="alert alert-success">Registration successful</div>}
-              {loading && <div className="alert alert-info">Loading...</div>}
+              {success && <div className="alert alert-success">Registro exitoso</div>}
+              {loading && <div className="alert alert-info">Cargando...</div>}
 
               <form onSubmit={handleReview}>
                 <div className="mb-3">
@@ -316,7 +346,7 @@ const Register = () => {
                     required
                     maxLength={selectedCountry?.length}
                     pattern={`[0-9]{${selectedCountry?.length}}`}
-                    title={`Enter exactly ${selectedCountry?.length} digits`}
+                    title={`Ingresa exactamente ${selectedCountry?.length} dígitos`}
                   />
                 </div>
 
