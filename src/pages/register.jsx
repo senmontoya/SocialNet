@@ -376,12 +376,14 @@ const Register = () => {
                   </button>
                   <button
                     type="button"
-                    className="btn btn-google"
+                    className="btn btn-google d-flex align-items-center justify-content-center"
                     onClick={handleGoogleRegister}
                     disabled={loading || isBlocked}
                   >
+                    <i className="bi bi-google me-2"></i>
                     Registrarse con Google
                   </button>
+
                 </div>
 
                 <p className="mt-3 text-center">
