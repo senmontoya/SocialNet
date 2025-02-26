@@ -1,108 +1,110 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar.jsx";
-import "../style/login.css";
 import { supabase } from "../supabaseClient.js";
+import '../style/login.css';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState(null);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError(null);
-    
-    const { error } = await supabase.auth.signInWithPassword({ 
-      email, 
-      password 
-    });
-    
-    if (error) setError(error.message);
-  };
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError(null);
 
-  const signInWithGoogle = async () => {
-    setError(null);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    });
-    
-    if (error) setError(error.message);
-  };
+        const { error } = await supabase.auth.signInWithPassword({ 
+            email, 
+            password 
+        });
 
-  return (
-    <div className="background-login justify-content-center align-items-center">
-      <Navbar />
-      <h1 className="text-center mt-5 text-light bl-semi">SocialNet</h1>
-      <h5 className="text-center d-flex justify-content-center mt-3 text-light w-75 mx-auto">
-        ¡Bienvenido a SocialNet! Tu espacio para conectar, compartir y descubrir lo que más te apasiona. ¡Estamos emocionados de que formes parte de nuestra comunidad! No olvides explorar, interactuar y, por supuesto, disfrutar de cada momento. ¡Haz de SocialNet tu lugar para estar!
-      </h5>
-      <div className="container-md">
-        <div className="card mt-5 mb-3 p-3 shadow-lg card-position">
-          <div className="row g-0">
-            <div className="col-md-4">
-              {/* Imagen aquí */}
-            </div>
-            <div className="col-md-8">
-              <div className="card-body text-center">
-                <h1 className="card-title ank-caps m-5">Inicia Sesion</h1>
-                <p className="card-text fs-6">
-                  Inicia sesion en tu cuenta para acceder a todas las funcionalidades de SocialNet. Disfruta de contenido exclusivo y mantente conectado con tu comunidad.
-                </p>
-                {error && <p className="text-danger">{error}</p>} {/* Display error if exists */}
-                <form className="col-sm m-5" onSubmit={handleLogin}>
-                  <div className="col-md-6 m-4 mx-auto">
-                    <label htmlFor="inputEmail4" className="form-label">Email</label>
-                    <input 
-                      type="email" 
-                      className="form-control" 
-                      id="inputEmail4" 
-                      value={email} 
-                      onChange={(e) => setEmail(e.target.value)} 
-                      required 
-                    />
-                  </div>
-                  <div className="col-md-6 m-4 mx-auto">
-                    <label htmlFor="inputPassword4" className="form-label">Password</label>
-                    <input 
-                      type="password" 
-                      className="form-control" 
-                      id="inputPassword4" 
-                      value={password} 
-                      onChange={(e) => setPassword(e.target.value)} 
-                      required 
-                    />
-                  </div>
-                  <div className="col-sm m-5">
-                    <div className="col-md-6 m-4 mx-auto">
-                      <button 
-                        type="submit" 
-                        className="btn btn-primary text-center btn-sm w-100"
-                      >
-                        Iniciar Sesion
-                      </button>
+        if (error) setError(error.message);
+    };
+
+    const signInWithGoogle = async () => {
+        setError(null);
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+        });
+
+        if (error) setError(error.message);
+    };
+
+    return (
+        <>
+            <Navbar />
+            <section className="login-section">
+                <div className="container-login d-flex align-items-center justify-content-center w-100">
+                    
+                    <div className="login-form-container p-5 mt-5 rounded shadow bg-light text-dark">
+                        <h2 className="text-center mb-4 ank">Iniciar Sesión</h2>
+                        
+                        {error && <div className="alert alert-danger">{error}</div>}
+
+                        <form onSubmit={handleLogin}>
+                            <div className="mb-4">
+                                <label className="form-label">Correo Electrónico</label>
+                                <input 
+                                    type="email" 
+                                    className="form-control"
+                                    placeholder="Ingrese su correo"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="form-label">Contraseña</label>
+                                <div className="input-group">
+                                    <input 
+                                        type={showPassword ? "text" : "password"} 
+                                        className="form-control"
+                                        placeholder="Ingrese su contraseña"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                    <button 
+                                        type="button" 
+                                        className="btn btn-outline-secondary"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        <i className={showPassword ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="mb-4 form-check">
+                                <input type="checkbox" name="connected" className="form-check-input" id="rememberMe" />
+                                <label htmlFor="rememberMe" className="form-check-label">Recuérdame</label>
+                            </div>
+
+                            <div className="d-grid">
+                                <button type="submit" className="btn btn-primary w-100">Iniciar Sesión</button>
+                            </div>
+
+                            <div className="row text-center">
+                              <span className="p-2"><a href="#">Recuperar Contraseña</a></span>
+                              <span>¿No tienes una cuenta? <a href="#">Regístrate</a></span> <br/>
+                            </div>
+                        </form>
+
+                        <hr className="my-4" />
+
+                        <button 
+                            className="btn btn-outline-danger w-100"
+                            onClick={signInWithGoogle}
+                        >
+                            <i className="bi bi-google me-2"></i>
+                            Iniciar sesión con Google
+                        </button>
                     </div>
-                    <div className="col-md-6 m-4 mx-auto">
-                      <button 
-                        type="button" 
-                        className="btn btn-outline-secondary text-center btn-sm w-100" 
-                        onClick={signInWithGoogle}
-                      >
-                        <i className="bi bi-google"></i>
-                        <span className="ms-2">Iniciar Sesion con Google</span>
-                      </button>
-                    </div>
-                  </div>
-                </form>
-                <p className="card-text m-5">
-                  <small className="text-dark">¿No tienes cuenta? <span className="text-primary">Registrate</span></small>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+
+                </div>
+            </section>
+        </>
+    );
 }
 
 export default Login;

@@ -1,0 +1,86 @@
+html{
+    background: url(../assets/img/background.avif) no-repeat center;
+    background-size: cover;
+    width: 100%;
+}
+
+html::before{
+    background-color: rgba(0,0,0,0.6);
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.register-title {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+.register-section {
+    background: url(../assets/img/background.avif) no-repeat center;
+    background-size: cover;
+    width: 100%;
+}
+
+.register-section::before {
+    background-color: rgba(0,0,0,0.6);
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.register-section, .container {
+    height: 100vh;
+    z-index: 1;
+    position: relative;
+}
+
+
+.btn-google, .btn-review {
+    border: 2px solid black;
+    padding: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-google {
+    background-color: white;
+    color: black;
+}
+
+.btn-google:hover {
+    background-color: black;
+    color: white;
+    transform: scale(1.05);
+}
+
+.btn-google:active {
+    transform: scale(0.95);
+}
+
+.btn-review {
+    background-color: #1b304b;
+    color: white;
+}
+
+.btn-review:hover {
+    background-color: #6592b8;
+    transform: scale(1.05);
+}
+
+.btn-review:active {
+    transform: scale(0.95);
+}
+
+.bg-section{
+    background-color: #487281;
+}

@@ -1,33 +1,44 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "../style/navbar.css";
-import logo from '../assets/img/logo.png';
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-    return(     
-        <nav className="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+    return (
+        <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <div className="container-fluid">
-                <a className="navbar-brand d-flex align-items-center" href="#">
-                    <img src={logo} alt="Logo SocialNet" width="50" height="50" className="me-2"/>
-                    <span>SocialNet</span>
-                </a>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav">
-                        <li className="nav-item">
-                        <a className="nav-link active" aria-current="page" href="#">Welcome</a>
-                        </li>
-                        <li className="nav-item">
-                        <a className="nav-link" href="#">Membresias</a>
-                        </li>
-                        <li className="nav-item">
-                        <a className="nav-link" href="#">Nosotros</a>
-                        </li>
-                    </ul>
+                <Link className="navbar-brand me-auto" to="/">SocialNet</Link>
+
+                <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div className="offcanvas-header">
+                        <h5 className="offcanvas-title" id="offcanvasNavbarLabel">SocialNet</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div className="offcanvas-body">
+                        <ul className="navbar-nav justify-content-center flex-grow-1 pe-3">
+                            <li className="nav-item">
+
+                                <Link className="nav-link mx-lg-2" to="/">Home</Link>
+
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link mx-lg-2" to="/about">Acerca De</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link mx-lg-2" to="/contact">Contactanos</Link>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <form className="d-flex">
-                    <button className="btn btn-outline-primary me-2" type="button" onClick={() => window.location.href='/register'}>Registrate</button>
-                    <button className="btn btn-primary" type="submit">Iniciar Sesion</button>
-                </form>
+
+                <Link to="/login" className="btn btn-primary">Login</Link>
+
+                <button className="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+
             </div>
         </nav>
     );
