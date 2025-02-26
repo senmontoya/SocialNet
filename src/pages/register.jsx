@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/navbar";
@@ -15,6 +16,7 @@ const Register = () => {
     password: "",
     countryCode: "+503",
     phone: "",
+
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -105,6 +107,7 @@ const Register = () => {
     }
     if (formData.password.length < 6) {
       setError("La contraseña debe tener al menos 6 caracteres.");
+
       return;
     }
     if (!isPhoneValid) {
@@ -137,9 +140,11 @@ const Register = () => {
       }
       if (!authData.user) throw new Error("Ocurrió un problema al crear tu cuenta.");
 
+
       const userId = authData.user.id;
 
       const { error: registroError } = await supabase
+
         .from("usuarios_registro")
         .insert({
           id_registro: userId,
@@ -161,6 +166,7 @@ const Register = () => {
         .insert({
           id_registro: userId,
           telefono: `${formData.countryCode}${formData.phone}`,
+
         })
         .select()
         .single();
@@ -170,12 +176,14 @@ const Register = () => {
       setSuccess(true);
       setFormData({ username: "", password: "", email: "", phone: "", countryCode: "+503" });
       navigate("/create-profile", { state: { userId: usuarioData.id_usuario } });
+
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleGoogleRegister = async () => {
     setError(null);
@@ -194,6 +202,7 @@ const Register = () => {
         },
       });
       if (error) throw new Error("No pudimos conectar con Google. Intenta de nuevo.");
+
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -207,6 +216,7 @@ const Register = () => {
       const user = session.user;
       const userId = user.id;
       const email = user.email;
+
       const nick = user.user_metadata.full_name || email.split("@")[0];
 
       const { data: existingRegistro, error: checkError } = await supabase
@@ -222,11 +232,14 @@ const Register = () => {
       let usuarioData;
       if (!existingRegistro) {
         const { error: registroError } = await supabase
+
           .from("usuarios_registro")
+
           .insert({
             id_registro: userId,
             nick: nick,
             email: email,
+
             fecha_registro: new Date().toISOString(),
           });
         if (registroError) throw new Error("Error al guardar en usuarios_registro: " + registroError.message);
@@ -254,6 +267,7 @@ const Register = () => {
       setSuccess(true);
       navigate("/create-profile", { state: { userId: usuarioData.id_usuario } });
       window.history.replaceState({}, document.title, "/register");
+
     } catch (error) {
       setError(error.message);
     } finally {
@@ -262,6 +276,7 @@ const Register = () => {
   };
 
   return (
+
     <>
       <Navbar />
       <section className="register-section">
@@ -274,6 +289,7 @@ const Register = () => {
               {success && <div className="alert alert-success">Registro exitoso</div>}
               {loading && <div className="alert alert-info">Cargando...</div>}
 
+
               <form onSubmit={handleReview}>
                 <div className="mb-3">
                   <label className="form-label">Nombre de usuario</label>
@@ -285,10 +301,12 @@ const Register = () => {
                     value={formData.username}
                     onChange={handleChange}
                     required
+
                   />
                 </div>
 
                 <div className="mb-3">
+
                   <label className="form-label">Correo Electrónico</label>
                   <input
                     type="email"
@@ -298,6 +316,7 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
+
                   />
                 </div>
 
@@ -311,10 +330,12 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     required
+
                   />
                 </div>
 
                 <div className="mb-3">
+
                   <label className="form-label">País</label>
                   <select
                     className="form-select"
@@ -323,7 +344,9 @@ const Register = () => {
                     onChange={handleChange}
                     required
                   >
+
                     <option value="">Selecciona tu país</option>
+
                     {countryOptions.map((country) => (
                       <option key={country.code} value={country.code}>
                         {country.name} ({country.code})
@@ -335,10 +358,12 @@ const Register = () => {
                 <div className="mb-4">
                   <label className="form-label">
                     Teléfono ({selectedCountry?.length} dígitos)
+
                   </label>
                   <input
                     type="tel"
                     className="form-control"
+
                     name="phone"
                     placeholder={selectedCountry?.formatExample}
                     value={formData.phone}
@@ -455,5 +480,6 @@ const Register = () => {
     </>
   );
 };
+
 
 export default Register;
