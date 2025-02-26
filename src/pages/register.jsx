@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/navbar";
 import "../style/register.css";
 import logo from "../assets/img/logo.png";
-import { supabase } from "../supabaseClient"; // Make sure this is correctly imported
+import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -22,13 +22,11 @@ const Register = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  // Country options with phone number lengths
   const countryOptions = [
     { name: "El Salvador", code: "+503", length: 8, formatExample: "7000-1234" },
     { name: "México", code: "+52", length: 10, formatExample: "55-1234-5678" },
     { name: "Estados Unidos", code: "+1", length: 10, formatExample: "123-456-7890" },
     { name: "Argentina", code: "+54", length: 10, formatExample: "11-1234-5678" },
-    // Add more countries as needed
   ];
 
   useEffect(() => {
@@ -101,33 +99,46 @@ const Register = () => {
 
       const userId = authData.user.id;
 
+      // Use upsert instead of insert to avoid duplicate key errors
       const { error: registroError } = await supabase
         .from("usuarios_registro")
-        .insert({
-          id_registro: userId,
-          nick: formData.username,
-          email: formData.email,
-          fecha_registro: new Date().toISOString(),
-        });
+        .upsert(
+          {
+            id_registro: userId,
+            nick: formData.username,
+            email: formData.email,
+            fecha_registro: new Date().toISOString(),
+          },
+          { onConflict: "id_registro" } // Specify the conflict target
+        );
 
       if (registroError) {
-        throw new Error(
-          registroError.message.includes("duplicate key")
-            ? "Username or email is already in use."
-            : "Error saving your data in usuarios_registro."
-        );
+        throw new Error("Error saving your data in usuarios_registro: " + registroError.message);
       }
 
-      const { data: usuarioData, error: usuarioError } = await supabase
+      // Check if the user already exists in usuarios before inserting
+      const { data: existingUsuario, error: checkUsuarioError } = await supabase
         .from("usuarios")
-        .insert({
-          id_registro: userId,
-          telefono: `${formData.countryCode}${formData.phone}`,
-        })
-        .select()
+        .select("id_usuario")
+        .eq("id_registro", userId)
         .single();
 
-      if (usuarioError) throw new Error("Error saving your phone number in usuarios.");
+      let usuarioData;
+      if (!existingUsuario) {
+        const { data, error: usuarioError } = await supabase
+          .from("usuarios")
+          .insert({
+            id_registro: userId,
+            telefono: `${formData.countryCode}${formData.phone}`,
+          })
+          .select()
+          .single();
+
+        if (usuarioError) throw new Error("Error saving your phone number in usuarios: " + usuarioError.message);
+        usuarioData = data;
+      } else {
+        usuarioData = existingUsuario;
+      }
 
       setSuccess(true);
       setFormData({ username: "", password: "", email: "", phone: "", countryCode: "+503" });
@@ -171,28 +182,30 @@ const Register = () => {
       const email = user.email;
       const nick = user.user_metadata.full_name || email.split("@")[0];
 
-      const { data: existingRegistro, error: checkError } = await supabase
+      // Use upsert to handle existing records
+      const { error: registroError } = await supabase
         .from("usuarios_registro")
-        .select("id_registro")
-        .eq("id_registro", userId)
-        .single();
-
-      if (checkError && checkError.code !== "PGRST116") {
-        throw new Error("Error verifying your registration: " + checkError.message);
-      }
-
-      let usuarioData;
-      if (!existingRegistro) {
-        const { error: registroError } = await supabase
-          .from("usuarios_registro")
-          .insert({
+        .upsert(
+          {
             id_registro: userId,
             nick: nick,
             email: email,
             fecha_registro: new Date().toISOString(),
-          });
-        if (registroError) throw new Error("Error saving in usuarios_registro: " + registroError.message);
+          },
+          { onConflict: "id_registro" }
+        );
 
+      if (registroError) throw new Error("Error saving in usuarios_registro: " + registroError.message);
+
+      // Check if the user exists in usuarios before inserting
+      const { data: existingUsuario, error: checkUsuarioError } = await supabase
+        .from("usuarios")
+        .select("id_usuario")
+        .eq("id_registro", userId)
+        .single();
+
+      let usuarioData;
+      if (!existingUsuario) {
         const { data, error: usuarioError } = await supabase
           .from("usuarios")
           .insert({
@@ -204,13 +217,7 @@ const Register = () => {
         if (usuarioError) throw new Error("Error saving in usuarios: " + usuarioError.message);
         usuarioData = data;
       } else {
-        const { data, error: usuarioError } = await supabase
-          .from("usuarios")
-          .select("id_usuario")
-          .eq("id_registro", userId)
-          .single();
-        if (usuarioError) throw new Error("Error retrieving your profile: " + usuarioError.message);
-        usuarioData = data;
+        usuarioData = existingUsuario;
       }
 
       setSuccess(true);
@@ -223,6 +230,7 @@ const Register = () => {
     }
   };
 
+  // The rest of your JSX remains unchanged
   return (
     <>
       <Navbar />
@@ -318,7 +326,7 @@ const Register = () => {
                     className="btn btn-review"
                     disabled={loading || !isPhoneValid}
                   >
-                      Crear Cuenta
+                    Crear Cuenta
                   </button>
                   <button
                     type="button"
