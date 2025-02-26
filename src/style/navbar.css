@@ -11,7 +11,7 @@
     font-size: 24px;
     transition: 0.3s color;
 }
-.login-button {
+.btn-login2 {
     background-color: #0d6efd;
     color: white;
     font-size: 14px;
@@ -21,7 +21,7 @@
     transition: 0.3s background-color;
 }
 
-.login-button:hover {
+.btn-login2:hover {
     background-color: darkblue;
 }
 

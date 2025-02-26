@@ -1,0 +1,136 @@
+/* 🔹 Fondo general */
+body {
+    background: url(../assets/img/background.avif) no-repeat center;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 70px; /* Espacio para evitar que la navbar lo cubra */
+}
+
+/* 🔹 Contenedor principal del formulario */
+.container {
+    max-width: 900px;
+    width: 100%;
+    padding: 20px;
+}
+
+/* 🔹 Tarjeta del formulario */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+/* 🔹 Título del formulario */
+.card-header {
+    background-color: #0d6efd;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+    padding: 15px;
+}
+
+/* 🔹 Inputs de los formularios */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+}
+
+/* 🔹 Botón principal */
+.btn-primary {
+    background-color: #0d6efd;
+    border: none;
+    padding: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    border-radius: 8px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.btn-primary:active {
+    transform: scale(0.95);
+}
+
+/* 🔹 Botones deshabilitados */
+.btn-primary:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+/* 🔹 Sección de subida de archivos */
+input[type="file"] {
+    border: none;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* 🔹 Texto de ayuda en los inputs */
+.form-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* 🔹 Mensajes de error y éxito */
+.alert {
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-info {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+/* 🔹 Responsividad */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .card-header {
+        font-size: 1.2rem;
+    }
+
+    .btn-primary {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .form-control {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
