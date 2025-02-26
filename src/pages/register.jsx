@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/navbar";
 import "../style/register.css";
@@ -16,13 +15,13 @@ const Register = () => {
     password: "",
     countryCode: "+503",
     phone: "",
-
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const hasRunRef = useRef(false); // Bandera para evitar doble ejecución
 
   const countryOptions = [
     { name: "Canadá", code: "+1", length: 10, formatExample: "416-555-1234" },
@@ -72,18 +71,29 @@ const Register = () => {
   ];
 
   useEffect(() => {
-    const checkSessionAndHandleCallback = async () => {
-      const { data: sessionData, error } = await supabase.auth.getSession();
-      if (error) {
-        setError(`Error al obtener la sesión: ${error.message}`);
-        return;
-      }
-      if (sessionData.session) {
-        handleOAuthCallback(sessionData.session);
+    const checkSession = async () => {
+      if (hasRunRef.current) return; // Evita doble ejecución
+      hasRunRef.current = true;
+
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log("useEffect - Sesión detectada:", session ? "Sí" : "No");
+      if (session) {
+        const { data: existingUsuario } = await supabase
+          .from("usuarios")
+          .select("id_usuario")
+          .eq("id_registro", session.user.id)
+          .single();
+        if (existingUsuario) {
+          console.log("useEffect - Usuario existente, navegando a /dashboard");
+          navigate("/dashboard");
+        } else {
+          console.log("useEffect - Sesión activa pero no usuario completo, procesando OAuth");
+          await handleOAuthCallback(session);
+        }
       }
     };
-    checkSessionAndHandleCallback();
-  }, []);
+    checkSession();
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -101,20 +111,10 @@ const Register = () => {
     e.preventDefault();
     setError(null);
 
-    if (!formData.username || !formData.email || !formData.password) {
-      setError("Por favor, completa todos los campos obligatorios.");
+    if (!formData.username || !formData.email || !formData.password || !isPhoneValid) {
+      setError("Por favor, completa todos los campos correctamente.");
       return;
     }
-    if (formData.password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres.");
-
-      return;
-    }
-    if (!isPhoneValid) {
-      setError(`El número de teléfono debe tener ${selectedCountry.length} dígitos para ${selectedCountry.name}.`);
-      return;
-    }
-
     setShowModal(true);
   };
 
@@ -123,160 +123,103 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      console.log("handleEmailSubmit - Iniciando registro por correo");
+      const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-        options: {
-          data: { nick: formData.username },
-        },
+        options: { data: { nick: formData.username } },
       });
 
-      if (authError) {
-        throw new Error(
-          authError.message.includes("already registered")
-            ? "Este correo ya está registrado. Intenta iniciar sesión."
-            : "No pudimos crear tu cuenta. Por favor, intenta de nuevo."
-        );
-      }
-      if (!authData.user) throw new Error("Ocurrió un problema al crear tu cuenta.");
+      if (error) throw error;
 
+      const userId = data.user.id;
+      console.log("handleEmailSubmit - Usuario creado con ID:", userId);
 
-      const userId = authData.user.id;
+      console.log("handleEmailSubmit - Insertando en usuarios_registro");
+      const { error: registroError } = await supabase.from("usuarios_registro").insert({
+        id_registro: userId,
+        nick: formData.username,
+        email: formData.email,
+        fecha_registro: new Date().toISOString(),
+      });
+      if (registroError) throw registroError;
 
-      const { error: registroError } = await supabase
-
-        .from("usuarios_registro")
-        .insert({
-          id_registro: userId,
-          nick: formData.username,
-          email: formData.email,
-          fecha_registro: new Date().toISOString(),
-        });
-
-      if (registroError) {
-        throw new Error(
-          registroError.message.includes("duplicate key")
-            ? "El nombre de usuario o correo ya está en uso."
-            : "Error al guardar tus datos en usuarios_registro."
-        );
-      }
-
+      console.log("handleEmailSubmit - Insertando en usuarios");
       const { data: usuarioData, error: usuarioError } = await supabase
         .from("usuarios")
-        .insert({
-          id_registro: userId,
-          telefono: `${formData.countryCode}${formData.phone}`,
-
-        })
+        .insert({ id_registro: userId, telefono: `${formData.countryCode}${formData.phone}` })
         .select()
         .single();
-
-      if (usuarioError) throw new Error("Error al guardar tu número de teléfono en usuarios.");
+      if (usuarioError) throw usuarioError;
 
       setSuccess(true);
-      setFormData({ username: "", password: "", email: "", phone: "", countryCode: "+503" });
+      setFormData({ username: "", email: "", password: "", countryCode: "+503", phone: "" });
+      console.log("handleEmailSubmit - Limpiando sesión y navegando a /create-profile");
+      await supabase.auth.signOut();
       navigate("/create-profile", { state: { userId: usuarioData.id_usuario } });
-
     } catch (error) {
       setError(error.message);
+      console.error("handleEmailSubmit - Error:", error.message);
     } finally {
       setLoading(false);
     }
   };
 
-
   const handleGoogleRegister = async () => {
-    setError(null);
-    setSuccess(false);
     setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: "http://localhost:5173/register",
-          queryParams: {
-            access_type: "offline",
-            prompt: "consent",
-          },
-        },
-      });
-      if (error) throw new Error("No pudimos conectar con Google. Intenta de nuevo.");
-
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
+    console.log("handleGoogleRegister - Iniciando registro con Google");
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin + "/register" },
+    });
   };
 
   const handleOAuthCallback = async (session) => {
-    setLoading(true);
+    const user = session.user;
+    const userId = user.id;
+    const email = user.email;
+    const nick = user.user_metadata.full_name || email.split("@")[0];
+    console.log("handleOAuthCallback - Procesando sesión para userId:", userId);
 
-    try {
-      const user = session.user;
-      const userId = user.id;
-      const email = user.email;
+    const { data: existingRegistro } = await supabase
+      .from("usuarios_registro")
+      .select("id_registro")
+      .eq("id_registro", userId)
+      .single();
 
-      const nick = user.user_metadata.full_name || email.split("@")[0];
+    if (!existingRegistro) {
+      console.log("handleOAuthCallback - Insertando en usuarios_registro");
+      const { error: registroError } = await supabase.from("usuarios_registro").insert({
+        id_registro: userId,
+        nick,
+        email,
+        fecha_registro: new Date().toISOString(),
+      });
+      if (registroError) throw registroError;
 
-      const { data: existingRegistro, error: checkError } = await supabase
-        .from("usuarios_registro")
-        .select("id_registro")
+      console.log("handleOAuthCallback - Insertando en usuarios");
+      const { data: usuarioData, error: usuarioError } = await supabase
+        .from("usuarios")
+        .insert({ id_registro: userId, telefono: "No proporcionado" })
+        .select()
+        .single();
+      if (usuarioError) throw usuarioError;
+
+      console.log("handleOAuthCallback - Navegando a /create-profile");
+      navigate("/create-profile", { state: { userId: usuarioData.id_usuario } });
+    } else {
+      console.log("handleOAuthCallback - Navegando a /dashboard");
+      const { data: usuarioData } = await supabase
+        .from("usuarios")
+        .select("id_usuario")
         .eq("id_registro", userId)
         .single();
-
-      if (checkError && checkError.code !== "PGRST116") {
-        throw new Error("Error al verificar tu registro: " + checkError.message);
-      }
-
-      let usuarioData;
-      if (!existingRegistro) {
-        const { error: registroError } = await supabase
-
-          .from("usuarios_registro")
-
-          .insert({
-            id_registro: userId,
-            nick: nick,
-            email: email,
-
-            fecha_registro: new Date().toISOString(),
-          });
-        if (registroError) throw new Error("Error al guardar en usuarios_registro: " + registroError.message);
-
-        const { data, error: usuarioError } = await supabase
-          .from("usuarios")
-          .insert({
-            id_registro: userId,
-            telefono: "No proporcionado",
-          })
-          .select()
-          .single();
-        if (usuarioError) throw new Error("Error al guardar en usuarios: " + usuarioError.message);
-        usuarioData = data;
-      } else {
-        const { data, error: usuarioError } = await supabase
-          .from("usuarios")
-          .select("id_usuario")
-          .eq("id_registro", userId)
-          .single();
-        if (usuarioError) throw new Error("Error al recuperar tu perfil: " + usuarioError.message);
-        usuarioData = data;
-      }
-
-      setSuccess(true);
-      navigate("/create-profile", { state: { userId: usuarioData.id_usuario } });
-      window.history.replaceState({}, document.title, "/register");
-
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      navigate("/dashboard", { state: { userId: usuarioData.id_usuario } });
     }
+    setLoading(false);
   };
 
   return (
-
     <>
       <Navbar />
       <section className="register-section">
@@ -289,7 +232,6 @@ const Register = () => {
               {success && <div className="alert alert-success">Registro exitoso</div>}
               {loading && <div className="alert alert-info">Cargando...</div>}
 
-
               <form onSubmit={handleReview}>
                 <div className="mb-3">
                   <label className="form-label">Nombre de usuario</label>
@@ -301,12 +243,10 @@ const Register = () => {
                     value={formData.username}
                     onChange={handleChange}
                     required
-
                   />
                 </div>
 
                 <div className="mb-3">
-
                   <label className="form-label">Correo Electrónico</label>
                   <input
                     type="email"
@@ -316,7 +256,6 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-
                   />
                 </div>
 
@@ -330,12 +269,10 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     required
-
                   />
                 </div>
 
                 <div className="mb-3">
-
                   <label className="form-label">País</label>
                   <select
                     className="form-select"
@@ -344,9 +281,7 @@ const Register = () => {
                     onChange={handleChange}
                     required
                   >
-
                     <option value="">Selecciona tu país</option>
-
                     {countryOptions.map((country) => (
                       <option key={country.code} value={country.code}>
                         {country.name} ({country.code})
@@ -358,12 +293,10 @@ const Register = () => {
                 <div className="mb-4">
                   <label className="form-label">
                     Teléfono ({selectedCountry?.length} dígitos)
-
                   </label>
                   <input
                     type="tel"
                     className="form-control"
-
                     name="phone"
                     placeholder={selectedCountry?.formatExample}
                     value={formData.phone}
@@ -450,7 +383,7 @@ const Register = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">
-                Teléfono ({selectedCountry.length} dígitos)
+                Teléfono ({selectedCountry?.length} dígitos)
               </label>
               <input
                 type="tel"
@@ -458,8 +391,8 @@ const Register = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                maxLength={selectedCountry.length}
-                placeholder={selectedCountry.formatExample}
+                maxLength={selectedCountry?.length}
+                placeholder={selectedCountry?.formatExample}
               />
             </div>
           </Modal.Body>
@@ -480,6 +413,5 @@ const Register = () => {
     </>
   );
 };
-
 
 export default Register;
