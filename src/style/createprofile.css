@@ -1,0 +1,113 @@
+/* 🔹 Contenedor general */
+.create-profile-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 🔹 Card de perfil */
+.create-profile-card {
+    display: flex;
+    flex-direction: row; /* 🔥 Mantiene el lado a lado en pantallas grandes */
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    width: 100%;
+    max-width: 1000px; /* 📌 Evita que sea demasiado grande */
+}
+
+/* 🔹 Sección izquierda (Formulario) */
+.create-profile-form-container {
+    width: 50%; /* 📌 La mitad del ancho */
+    padding: 50px;
+}
+
+/* 🔹 Sección derecha (Texto + Logo) */
+.create-profile-right-section {
+    width: 50%; /* 📌 La otra mitad del ancho */
+    background: linear-gradient(135deg, #1f2530, #3b4a5a);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 20px;
+}
+
+/* 🔹 Ajuste del texto en la parte derecha */
+.create-profile-right-section h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 🔹 Ajuste del logo */
+.create-profile-logo {
+    width: 150px;
+    height: auto;
+    margin-top: 10px;
+    display: block;
+    max-width: 100%;
+}
+
+/* 🔹 Inputs del formulario */
+.create-profile-form-group {
+    margin-bottom: 20px;
+}
+
+.create-profile-form-label {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.create-profile-form-control {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: #f8f9fa;
+}
+
+/* 🔹 Botón de guardar */
+.create-profile-btn {
+    border: 2px solid black;
+    padding: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+    color: black;
+}
+
+.create-profile-btn:hover {
+    background-color: black;
+    color: white;
+    transform: scale(1.05);
+}
+
+.create-profile-btn:active {
+    transform: scale(0.95);
+}
+
+/* 🔹 📌 RESPONSIVE: OCULTAR LA SECCIÓN DEL LOGO EN MÓVILES */
+@media (max-width: 768px) {
+    /* 📌 Oculta la sección del logo en dispositivos móviles */
+    .create-profile-right-section {
+        display: none !important;
+    }
+
+    /* 📌 Hace que el formulario ocupe todo el ancho */
+    .create-profile-form-container {
+        width: 100% !important;
+    }
+
+    /* 📌 Apila los elementos en móviles */
+    .create-profile-card {
+        flex-direction: column;
+    }
+}

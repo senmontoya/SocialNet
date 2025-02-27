@@ -1,8 +1,10 @@
-// src/components/CreateProfile.jsx
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import "../style/createprofile.css";
+import Navbar from '../components/navbar';
+import logo from "../assets/img/logo.png";
 
 function CreateProfile() {
   const [formData, setFormData] = useState({
@@ -129,7 +131,6 @@ function CreateProfile() {
         fotoPerfilUrl = publicUrlData.publicUrl;
       }
 
-      // Verificar si ya existe un perfil para este usuario
       const { data: existingProfile, error: checkError } = await supabase
         .from('perfiles')
         .select('id_perfil')
@@ -141,7 +142,6 @@ function CreateProfile() {
       }
 
       if (!existingProfile) {
-        // Crear nuevo perfil si no existe
         const { error: insertError } = await supabase
           .from('perfiles')
           .insert({
@@ -158,7 +158,6 @@ function CreateProfile() {
           throw new Error('No pudimos guardar tu perfil. Intenta de nuevo.');
         }
       } else {
-        // Si ya existe un perfil, podrías actualizarlo (opcional)
         setError('Ya tienes un perfil creado. Redirigiendo...');
         navigate('/dashboard');
         return;
@@ -174,64 +173,60 @@ function CreateProfile() {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h3>Crea tu perfil en SocialNet</h3>
-            </div>
-            <div className="card-body">
+    <>
+      <Navbar />
+      <section className="create-profile-section">
+        <div className="container vh-100 d-flex justify-content-center align-items-center">
+          <div className="row w-75 shadow-lg bg-white rounded-4 overflow-hidden">
+            {/* Sección izquierda - Formulario */}
+            <div className="col-md-7 p-5 create-profile-form-container">
+              <h2 className="mb-4 text-center">Completa tu perfil</h2>
+
               {error && <div className="alert alert-danger">{error}</div>}
               {success && <div className="alert alert-success">¡Perfil creado exitosamente!</div>}
-              {loading && <div className="alert alert-info">Cargando...</div>}
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="url_pagina_web" className="form-label">Página web (opcional)</label>
+                  <label className="form-label">Página web (opcional)</label>
                   <input
                     type="url"
                     className="form-control"
-                    id="url_pagina_web"
                     name="url_pagina_web"
+                    placeholder="https://e-Dynamycs.com"
                     value={formData.url_pagina_web}
                     onChange={handleChange}
-                    placeholder="https://tuweb.com"
                   />
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="ciudad" className="form-label">Ciudad (opcional)</label>
+                  <label className="form-label">Ciudad</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="ciudad"
                     name="ciudad"
+                    placeholder="Ejemplo: San Salvador"
                     value={formData.ciudad}
                     onChange={handleChange}
-                    placeholder="Ejemplo: San Salvador"
                   />
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="pais" className="form-label">País (opcional)</label>
+                  <label className="form-label">Pais</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="pais"
                     name="pais"
+                    placeholder="Ejemplo: El Salvador"
                     value={formData.pais}
                     onChange={handleChange}
-                    placeholder="Ejemplo: El Salvador"
                   />
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="fecha_nacimiento" className="form-label">Fecha de nacimiento (opcional)</label>
+                  <label className="form-label">Fecha de nacimiento</label>
                   <input
                     type="date"
                     className="form-control"
-                    id="fecha_nacimiento"
                     name="fecha_nacimiento"
                     value={formData.fecha_nacimiento}
                     onChange={handleChange}
@@ -239,42 +234,46 @@ function CreateProfile() {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="foto_perfil" className="form-label">Foto de perfil (opcional)</label>
+                  <label className="form-label">Foto de perfil</label>
                   <input
                     type="file"
                     className="form-control"
-                    id="foto_perfil"
                     name="foto_perfil"
                     accept="image/*"
                     onChange={handleChange}
                   />
-                  <small className="form-text text-muted">
-                    Selecciona una imagen desde tu dispositivo. Se convertirá a un formato ligero (WebP).
-                  </small>
+                  
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="descripcion" className="form-label">Descripción (opcional)</label>
+                  <label className="form-label">Descripción (opcional)</label>
                   <textarea
                     className="form-control"
-                    id="descripcion"
                     name="descripcion"
-                    value={formData.descripcion}
-                    onChange={handleChange}
                     placeholder="Cuéntanos sobre ti..."
                     rows="3"
+                    value={formData.descripcion}
+                    onChange={handleChange}
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                  Guardar perfil
-                </button>
+                <div className="d-grid">
+                  <button type="submit" className="btn create-profile-btn" disabled={loading}>
+                    {loading ? 'Guardando...' : 'Guardar perfil'}
+                  </button>
+                </div>
               </form>
+            </div>
+
+            {/* Sección derecha - Texto "CREA TU PERFIL" y Logo */}
+            <div className="col-md-5 d-flex flex-column align-items-center justify-content-center text-white create-profile-right-section">
+              <h1 className="text-uppercase text-center fw-bold mb-4">¡Únete creando un perfil!</h1>
+              <img src={logo} alt="Logo" className="create-profile-logo" />
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
 

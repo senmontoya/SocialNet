@@ -33,7 +33,7 @@ const Navbar = () => {
                     </div>
                 </div>
 
-                <Link to="/login" className="btn btn-primary">Login</Link>
+                <Link to="/login" className="btn btn-login2">Login</Link>
 
                 <button className="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                     <span className="navbar-toggler-icon"></span>
