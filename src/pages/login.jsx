@@ -44,7 +44,7 @@ function Login() {
                 <div className="row w-100 shadow-lg bg-white rounded-4 overflow-hidden">
                     
                     {/* Sección del Formulario de Login */}
-                    <div className="col-lg-7 col-md-12 p-5">
+                    <div className=" col-lg-7 col-md-12 p-5">
                         <h2 className="mb-4 text-center">Iniciar Sesión</h2>
 
                         {error && <div className="alert alert-danger">{error}</div>}
