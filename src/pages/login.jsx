@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar.jsx";
+import logo from "../assets/img/logo.png";
 import { supabase } from "../supabaseClient.js";
 import '../style/login.css';
 
@@ -21,7 +22,7 @@ function Login() {
         if (error) {
             setError(error.message);
         } else {
-            window.location.href = '/dashboard'; // Redirect to dashboard on success
+            window.location.href = '/dashboard'; // Redirigir al dashboard si el login es exitoso
         }
     };
 
@@ -38,11 +39,14 @@ function Login() {
     return (
         <>
             <Navbar />
-            <section className="login-section">
-                <div className="container-login d-flex align-items-center justify-content-center w-100">
-                    <div className="login-form-container p-5 mt-5 rounded shadow bg-light text-dark">
-                        <h2 className="text-center mb-4 ank">Iniciar Sesión</h2>
-                        
+            <section>
+            <div className="container d-flex justify-content-center align-items-center vh-100">
+                <div className="row w-100 shadow-lg bg-white rounded-4 overflow-hidden">
+                    
+                    {/* Sección del Formulario de Login */}
+                    <div className=" col-lg-7 col-md-12 p-5">
+                        <h2 className="mb-4 text-center">Iniciar Sesión</h2>
+
                         {error && <div className="alert alert-danger">{error}</div>}
 
                         <form onSubmit={handleLogin}>
@@ -85,12 +89,12 @@ function Login() {
                             </div>
 
                             <div className="d-grid">
-                                <button type="submit" className="btn btn-primary w-100">Iniciar Sesión</button>
+                                <button type="submit" className="btn btn-iniciarsesion w-100">Iniciar Sesión</button>
                             </div>
 
                             <div className="row text-center">
-                              <span className="p-2"><a href="#">Recuperar Contraseña</a></span>
-                              <span>¿No tienes una cuenta? <a href="/register">Regístrate</a></span>
+                                <span className="p-2"><a href="#">Recuperar Contraseña</a></span>
+                                <span>¿No tienes una cuenta? <a href="/register">Regístrate</a></span>
                             </div>
                         </form>
 
@@ -104,7 +108,14 @@ function Login() {
                             Iniciar sesión con Google
                         </button>
                     </div>
+
+                    {/* Sección del Logo */}
+                    <div className="col-lg-5 d-none d-lg-flex bg-logo align-items-center justify-content-center">
+                    <img src={logo} alt="Logo" className="img-fluid" style={{ maxWidth: "80%" }} />
+                    </div>
+
                 </div>
+            </div>
             </section>
         </>
     );
