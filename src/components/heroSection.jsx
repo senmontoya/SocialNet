@@ -15,7 +15,7 @@ const HeroSection = () => {
                 </h2>
                 <div className="d-flex justify-content-between">
                     <Link to="/Login" className="btn btn-primary">Iniciar Sesión</Link>
-                    <Link to="./register" className="btn btn-outline-register" style={{ marginLeft: '20px' }}>Registrarse</Link>
+                    <Link to="/Register" className="btn btn-outline-register" style={{ marginLeft: '20px' }}>Registrarse</Link>
                 </div>
             </div>
         </section>
