@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Welcome from './pages/welcome.jsx'
 import Login from './pages/login.jsx'
 import Register from './pages/register.jsx'
-
 import Create from './pages/CreateProfile.jsx'
 import HeroSection from './components/heroSection.jsx'
 import navbar from './components/navbar.jsx'
