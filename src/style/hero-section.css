@@ -1,17 +1,15 @@
-/* Fondo de la sección */
 .hero-section {
     background: url(../assets/img/background.avif) no-repeat center;
     background-size: cover;
     width: 100%;
-    min-height: 100vh; /* Asegura que cubra toda la pantalla */
+    min-height: 100vh; 
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    padding-top: 80px; /* Ajuste para evitar que la navbar la cubra */
+    padding-top: 80px; 
 }
 
-/* Capa oscura sobre la imagen */
 .hero-section {
     background-color: rgba(0,0,0,0.6);
     content: "";
@@ -23,7 +21,7 @@
     z-index: 0;
 }
 
-/* Contenedor dentro de HeroSection */
+
 .hero-section .container {
     position: relative;
     z-index: 1;
@@ -33,7 +31,6 @@
 }
 
 
-/* Botón Registrarse */
 .btn-outline-register {
     background-color: #1b304b;
     color: white;
@@ -51,10 +48,9 @@
     transform: scale(0.95);
 }
 
-/* Ajustes responsivos */
 @media (max-width: 991px) {
     .hero-section {
-        padding-top: 100px; /* Más espacio en móviles */
+        padding-top: 100px; 
     }
 
     .hero-section h1 {
@@ -67,7 +63,7 @@
     }
 
     .btn-primary, .btn-outline-register {
-        width: 100%; /* Los botones ocupan todo el ancho en móviles */
+        width: 100%;
         margin-top: 10px;
     }
 }
