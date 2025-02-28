@@ -12,7 +12,7 @@
 }
 
 /* Capa oscura sobre la imagen */
-.hero-section::before {
+.hero-section {
     background-color: rgba(0,0,0,0.6);
     content: "";
     position: absolute;
@@ -32,25 +32,6 @@
     padding: 20px;
 }
 
-/* Botones */
-.btn-primary {
-    border: 2px solid black;
-    padding: 10px;
-    font-weight: bold;
-    transition: all 0.3s ease-in-out;
-    background-color: white;
-    color: black;
-}
-
-.btn-primary:hover {
-    background-color: black;
-    color: white;
-    transform: scale(1.05);
-}
-
-.btn-primary:active {
-    transform: scale(0.95);
-}
 
 /* Botón Registrarse */
 .btn-outline-register {

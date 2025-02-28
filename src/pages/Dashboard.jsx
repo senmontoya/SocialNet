@@ -5,6 +5,7 @@ import Sidebar from "../components/sidebar"
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import '../style/dashboard.css'
 
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
@@ -76,23 +77,25 @@ const Dashboard = () => {
   return (
     <>
       <Sidebar/>
-      <main className="main-content">
-        <h2 className="text-center mb-4 text-light">Bienvenido a tu Dashboard</h2>
-        <div className="card shadow p-4 mx-auto" style={{ maxWidth: "500px" }}>
-         <h4 className="card-title text-center">Datos del usuario</h4>
-         <div className="card-body">
-           <p><strong>Nombre de usuario:</strong> {userData?.nick}</p>
-           <p><strong>Correo:</strong> {userData?.email}</p>
-           <Button 
-            variant="danger"
-            onClick={handleSignOut}
-            className="w-100 mt-3"
-           >
-            Cerrar Sesion
-           </Button>
-         </div>
-        </div>
+      <main className="dashboard">
+        <div>
+          <h2 className="text-center mb-4 text-light">Bienvenido a tu Dashboard</h2>
+          <div className="card shadow p-4 mx-auto" style={{ maxWidth: "500px" }}>
+            <h4 className="card-title text-center">Datos del usuario</h4>
+            <div className="card-body">
+              <p><strong>Nombre de usuario:</strong> {userData?.nick}</p>
+              <p><strong>Correo:</strong> {userData?.email}</p>
+              <Button 
+                variant="danger"
+                onClick={handleSignOut}
+                className="w-100 mt-3"
+              >
+                Cerrar Sesion
+              </Button>
+            </div>
+          </div>
 
+        </div>
       </main>
       
     </>

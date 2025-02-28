@@ -1,4 +1,4 @@
-html, body {
+.register-section {
     background: url(../assets/img/background.avif) no-repeat center;
     background-size: cover;
     width: 100%;
@@ -7,7 +7,7 @@ html, body {
     padding: 0;
 }
 
-html::before {
+.register-section::before {
     background-color: rgba(0,0,0,0.6);
     content: "";
     position: absolute;
@@ -109,7 +109,7 @@ html::before {
         font-size: 1.8rem;
     }
 
-    .container {
+    .container-login {
         padding: 10px;
     }
 }

@@ -1,3 +1,117 @@
+.group-background {
+    background: url(../assets/img/background.avif) no-repeat center;
+    background-size: cover;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    padding-top: 50px;
+}
 .section-header {
-    margin-left: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px); 
+}
+
+.custom-modal .modal-dialog {
+    max-width: 500px;
+    margin: 1.75rem auto;
+}
+
+.custom-modal .modal-content {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-modal .modal-header {
+    border-bottom: none;
+    padding-bottom: 10px;
+}
+
+.custom-modal .modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.custom-modal .modal-body {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.custom-modal .form-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.custom-modal .form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.custom-modal .modal-footer {
+    border-top: none;
+    padding-top: 10px;
+    text-align: right;
+}
+
+.custom-modal .btn {
+    border-radius: 5px;
+    padding: 8px 20px;
+}
+
+.custom-modal .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.custom-modal .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.custom-modal .btn-close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #000;
+}
+
+.my-groups {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.my-groups h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.my-groups .list-group {
+    margin-top: 15px;
+}
+
+.my-groups .list-group-item {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
+.my-groups .list-group-item strong {
+    font-size: 1.1rem;
+    color: #007bff;
+}
+
+.my-groups .list-group-item p {
+    margin-top: 5px;
+    color: #666;
 }

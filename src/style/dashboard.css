@@ -1,4 +1,4 @@
-.dashboard.container {
+.dashboard {
     background: url(../assets/img/background.avif) no-repeat center;
     background-size: cover;
     width: 100%;
@@ -9,13 +9,4 @@
     padding-top: 50px;
 }
 
-body::before{
-    background-color: rgba(0,0,0,0.6);
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 0;
-}
+
