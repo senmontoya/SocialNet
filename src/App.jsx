@@ -17,13 +17,13 @@ function App() {
       <Routes>
 
         <Route path='/' element={<Welcome />} />
-        <Route path='/Login' element={<Login/>}/>
+        <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/create-profile' element={<Create/>}/>
         <Route path='/heroSection' element={<HeroSection/>}/>
-        <Route path='/Dashboard' element={<Dashboard/>}/>
-        <Route path='/SectionGroups' element={<SectionGroup/>}/>
-        <Route path='/EditProfile' element={<EditProfile/>}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/sectionGroups' element={<SectionGroup/>}/>
+        <Route path='/editProfile' element={<EditProfile/>}/>
         
 
       </Routes>
