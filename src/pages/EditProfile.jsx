@@ -85,17 +85,6 @@ const EditProfile = () => {
     fetchUserData();
   }, [navigate]);
 
-  if (loading) {
-    return (
-      <>
-        <Navbar />
-        <div className="edit-background section-sidebar">
-          <p>Cargando...</p>
-        </div>
-      </>
-    );
-  }
-
   if (error) {
     return (
       <>
