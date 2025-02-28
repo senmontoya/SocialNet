@@ -1,0 +1,18 @@
+.edit-background {
+    background: url(../assets/img/background.avif) no-repeat center;
+    background-size: cover;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    padding-top: 50px;
+}
+
+.section-sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px); 
+}
+

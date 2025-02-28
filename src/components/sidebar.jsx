@@ -11,6 +11,14 @@ const Sidebar = () => {
                 <a className="nav-link">
                     <span className="descripcion">SocialNet</span>
                 </a>
+                <Link to='/EditProfile'>
+                    <a className="nav-link">
+                        <span className="icon">
+                            <i class="bi bi-person-circle"></i>
+                        </span>
+                        <span className="descripcion">Perfil</span>
+                    </a>
+                </Link>
                 <a className="nav-link">
                     <span>
                         <i class="bi bi-house-fill"></i>
@@ -18,7 +26,7 @@ const Sidebar = () => {
                     <span className="descripcion">Home</span>
 
                 </a>
-                <Link to='/Groups'>
+                <Link to='/SectionGroups'>
                     <a className="nav-link">
                         <span className="icon">
                             <i className="bi bi-people-fill"></i>

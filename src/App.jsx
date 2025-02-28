@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Welcome from './pages/welcome.jsx'
@@ -7,7 +6,8 @@ import Register from './pages/register.jsx'
 import Create from './pages/CreateProfile.jsx'
 import HeroSection from './components/heroSection.jsx'
 import Dashboard from './pages/Dashboard.jsx'
-import Group from './pages/Groups.jsx'
+import SectionGroup from './pages/SectionGroups.jsx'
+import EditProfile from './pages/EditProfile.jsx'
 
 function App() {
 
@@ -22,7 +22,8 @@ function App() {
         <Route path='/create-profile' element={<Create/>}/>
         <Route path='/heroSection' element={<HeroSection/>}/>
         <Route path='/Dashboard' element={<Dashboard/>}/>
-        <Route path='/Groups' element={<Group/>}/>
+        <Route path='/SectionGroups' element={<SectionGroup/>}/>
+        <Route path='/EditProfile' element={<EditProfile/>}/>
         
 
       </Routes>
