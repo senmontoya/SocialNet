@@ -70,7 +70,7 @@ const EditProfile = () => {
           nick: registroData.nick,
           email: registroData.email,
           descripcion: perfilData?.descripcion || "Sin descripción",
-          foto_perfil: fotoPerfilUrl || "https://via.placeholder.com/150", // Fallback por defecto
+          foto_perfil: fotoPerfilUrl, // Será null si no hay foto
           ciudad: perfilData?.ciudad || "",
           pais: perfilData?.pais || "",
           fecha_nacimiento: perfilData?.fecha_nacimiento || "",
@@ -124,16 +124,21 @@ const EditProfile = () => {
                         className="rounded-circle"
                         style={{ width: "150px", height: "150px", objectFit: "cover" }}
                         onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/150";
+                          e.target.style.display = "none"; // Ocultar imagen rota
+                          e.target.nextSibling.style.display = "block"; // Mostrar ícono
                           console.error("Error cargando la imagen");
                         }}
                       />
-                    ) : (
-                      <i
-                        className="bi bi-person-circle"
-                        style={{ fontSize: "150px", color: "#6c757d" }}
-                      ></i>
-                    )}
+                    ) : null}
+                    {/* Ícono de Bootstrap si no hay foto o falla la carga */}
+                    <i
+                      className="bi bi-person-circle"
+                      style={{
+                        fontSize: "150px",
+                        color: "#6c757d",
+                        display: userData.foto_perfil ? "none" : "block", // Mostrar solo si no hay foto
+                      }}
+                    ></i>
                   </div>
 
                   <div className="col-12 col-md-8">
