@@ -125,7 +125,7 @@ const Register = () => {
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError("Las contraseñas no coinciden.");
+      setError("Las contraseñas no coinciden. Verifícalas.");
       return;
     }
     setShowModal(true);
@@ -137,7 +137,7 @@ const Register = () => {
 
     try {
       if (isBlocked) {
-        setError("Has excedido el número de intentos. Por favor, intenta de nuevo más tarde.");
+        setError("Has intentado demasiadas veces. Espera un poco antes de intentar de nuevo.");
         console.log("handleEmailSubmit - Registro bloqueado por intentos fallidos");
         return;
       }
@@ -151,7 +151,36 @@ const Register = () => {
 
       if (error) {
         console.log("handleEmailSubmit - Error en signUp:", error.message);
-        throw error;
+        switch (error.message) {
+          case "Password should be at least 12 characters. Password should contain at least one character of each: abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ, 0123456789, !@#$%^&*()_+-=[]{};'\":|<>?,./`~.":
+            setError("La contraseña debe tener al menos 12 caracteres e incluir una letra minúscula, una mayúscula, un número y un símbolo especial (como !@#$%).");
+            break;
+          case "User already registered":
+            setError("Ya existe una cuenta con este correo. ¿Quieres iniciar sesión?");
+            break;
+          case "Invalid email":
+            setError("El correo no es válido. Por favor, revisa que esté bien escrito.");
+            break;
+          case "Too many requests":
+            setError("Demasiados intentos seguidos. Espera un momento antes de intentarlo de nuevo.");
+            break;
+          default:
+            setError("Algo salió mal al registrarte. Por favor, intenta de nuevo.");
+            console.error("Error no manejado:", error.message);
+        }
+        setFailedAttempts((prev) => {
+          const newAttempts = prev + 1;
+          if (newAttempts >= 5) {
+            setIsBlocked(true);
+            setError("Has intentado demasiadas veces. Espera un poco antes de intentar de nuevo.");
+            console.log("handleEmailSubmit - Bloqueo activado, intentos:", newAttempts);
+          } else {
+            setError((prevError) => `${prevError} Intentos restantes: ${5 - newAttempts}`);
+            console.log("handleEmailSubmit - Intento fallido, restantes:", 5 - newAttempts);
+          }
+          return newAttempts;
+        });
+        return;
       }
 
       console.log("handleEmailSubmit - Registro exitoso, procesando sesión");
@@ -159,7 +188,7 @@ const Register = () => {
       if (!session) {
         console.log("handleEmailSubmit - No se encontró sesión activa, intentando refrescar");
         const { data: refreshedSession } = await supabase.auth.refreshSession();
-        if (!refreshedSession.session) throw new Error("No se pudo obtener sesión activa");
+        if (!refreshedSession.session) throw new Error("No pudimos confirmar tu registro. Intenta de nuevo.");
         await handleCallback(refreshedSession.session);
       } else {
         await handleCallback(session);
@@ -169,19 +198,8 @@ const Register = () => {
       setFormData({ username: "", email: "", password: "", confirmPassword: "", countryCode: "+503", phone: "" });
       setFailedAttempts(0);
     } catch (error) {
-      setFailedAttempts((prev) => {
-        const newAttempts = prev + 1;
-        if (newAttempts >= 5) {
-          setIsBlocked(true);
-          setError("Has excedido el número de intentos. Por favor, espera antes de intentar de nuevo.");
-          console.log("handleEmailSubmit - Bloqueo activado, intentos:", newAttempts);
-        } else {
-          setError(`Error: ${error.message}. Intentos restantes: ${5 - newAttempts}`);
-          console.log("handleEmailSubmit - Intento fallido, restantes:", 5 - newAttempts);
-        }
-        return newAttempts;
-      });
-      console.error("handleEmailSubmit - Error:", error.message);
+      setError("Algo salió mal al intentar registrarte. Por favor, intenta de nuevo.");
+      console.error("handleEmailSubmit - Error inesperado:", error.message);
     } finally {
       setLoading(false);
     }
@@ -190,10 +208,25 @@ const Register = () => {
   const handleGoogleRegister = async () => {
     setLoading(true);
     console.log("handleGoogleRegister - Iniciando registro con Google");
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: window.location.origin + "/register" },
     });
+
+    if (error) {
+      switch (error.message) {
+        case "Error getting user info":
+          setError("No pudimos obtener tu información de Google. Intenta de nuevo.");
+          break;
+        case "OAuth provider error":
+          setError("Hubo un problema con Google. Por favor, intenta más tarde.");
+          break;
+        default:
+          setError("Algo salió mal al registrarte con Google. Intenta de nuevo.");
+          console.error("Error no manejado:", error.message);
+      }
+    }
+    setLoading(false);
   };
 
   const handleCallback = async (session) => {
@@ -217,7 +250,10 @@ const Register = () => {
         email,
         fecha_registro: new Date().toISOString(),
       });
-      if (registroError) throw registroError;
+      if (registroError) {
+        setError("No pudimos guardar tu información básica. Intenta de nuevo.");
+        throw registroError;
+      }
 
       console.log("handleCallback - Insertando en usuarios");
       const { data: usuarioData, error: usuarioError } = await supabase
@@ -225,7 +261,10 @@ const Register = () => {
         .insert({ id_registro: userId, telefono: formData.phone ? `${formData.countryCode}${formData.phone}` : "No proporcionado" })
         .select()
         .single();
-      if (usuarioError) throw usuarioError;
+      if (usuarioError) {
+        setError("No pudimos completar tu registro. Intenta de nuevo.");
+        throw usuarioError;
+      }
 
       console.log("handleCallback - Navegando a /create-profile con userId:", usuarioData.id_usuario);
       navigate("/create-profile", { state: { userId: usuarioData.id_usuario } });
@@ -251,11 +290,11 @@ const Register = () => {
               <h2 className="register-title text-center">Crea tu cuenta</h2>
 
               {error && <div className="alert alert-danger">{error}</div>}
-              {success && <div className="alert alert-success">Registro exitoso</div>}
+              {success && <div className="alert alert-success">¡Registro exitoso! Revisa tu correo para confirmar.</div>}
               {loading && <div className="alert alert-info">Cargando...</div>}
               {isBlocked && (
                 <div className="alert alert-warning">
-                  Cuenta bloqueada por demasiados intentos fallidos. Intenta de nuevo más tarde.
+                  Has intentado demasiadas veces. Espera un poco antes de intentar de nuevo.
                 </div>
               )}
 
@@ -383,7 +422,6 @@ const Register = () => {
                     <i className="bi bi-google me-2"></i>
                     Registrarse con Google
                   </button>
-
                 </div>
 
                 <p className="mt-3 text-center">
