@@ -11,7 +11,7 @@
 
 .login-form-container {
     width: 90%;
-    max-width: 400px; /* Formulario más pequeño */
+    max-width: 400px;
     padding: 30px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 10px;

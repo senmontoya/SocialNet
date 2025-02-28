@@ -6,13 +6,53 @@
     display: flex;
     padding-top: 50px;
 }
-
 .section-sidebar {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-left: 250px;
     padding: 20px;
-    width: calc(100% - 250px); 
+    width: calc(100% - 250px);
+}
+.container {
+    margin-left: 250px; /* Espacio para la barra lateral */
+    width: calc(100% - 250px);
+}
+.card.shadow-lg {
+    background-color: #fff;
+    border-radius: 8px;
 }
 
+.custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-dialog {
+    max-width: 500px;
+    width: 90%;
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}

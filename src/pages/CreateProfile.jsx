@@ -26,7 +26,7 @@ function CreateProfile() {
     const checkSessionAndUserId = async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
       if (error || !session || !userId) {
-        setError('Debes estar autenticado y registrado para crear un perfil.');
+        setError('Necesitas estar registrado para crear tu perfil. Por favor, regístrate.');
         navigate('/register');
       }
     };
@@ -73,7 +73,7 @@ function CreateProfile() {
             if (blob) {
               resolve(new File([blob], file.name.replace(/\.[^/.]+$/, '.webp'), { type: 'image/webp' }));
             } else {
-              reject(new Error('No se pudo convertir la imagen a WebP.'));
+              reject(new Error('No pudimos convertir tu foto a WebP. Usa otro archivo.'));
             }
           },
           'image/webp',
@@ -81,8 +81,8 @@ function CreateProfile() {
         );
       };
 
-      img.onerror = () => reject(new Error('Error al cargar la imagen.'));
-      reader.onerror = () => reject(new Error('Error al leer el archivo.'));
+      img.onerror = () => reject(new Error('No pudimos cargar tu foto. Prueba con otra.'));
+      reader.onerror = () => reject(new Error('Error al leer tu foto. Intenta de nuevo.'));
 
       reader.readAsDataURL(file);
     });
@@ -95,7 +95,7 @@ function CreateProfile() {
     setLoading(true);
 
     if (!userId) {
-      setError('No se pudo identificar tu cuenta. Por favor, regístrate de nuevo.');
+      setError('No podemos encontrar tu cuenta. Por favor, regístrate otra vez.');
       setLoading(false);
       return;
     }
@@ -103,7 +103,7 @@ function CreateProfile() {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if (authError || !user) {
-        throw new Error('No estás autenticado. Por favor, inicia sesión nuevamente.');
+        throw new Error('No estás conectado. Por favor, inicia sesión de nuevo.');
       }
       const authUserId = user.id;
 
@@ -120,14 +120,14 @@ function CreateProfile() {
           });
 
         if (uploadError) {
-          throw new Error('No pudimos subir tu foto de perfil. Intenta de nuevo.');
+          throw new Error('No pudimos subir tu foto de perfil. Intenta con otra foto.');
         }
 
         const { data: publicUrlData } = supabase.storage
           .from('profile-pics')
           .getPublicUrl(fileName);
 
-        if (!publicUrlData) throw new Error('No se pudo obtener la URL de tu foto de perfil.');
+        if (!publicUrlData) throw new Error('No pudimos guardar la dirección de tu foto de perfil.');
         fotoPerfilUrl = publicUrlData.publicUrl;
       }
 
@@ -138,7 +138,7 @@ function CreateProfile() {
         .single();
 
       if (checkError && checkError.code !== 'PGRST116') {
-        throw new Error('Error al verificar el perfil existente: ' + checkError.message);
+        throw new Error('No pudimos verificar si ya tienes un perfil. Intenta de nuevo.');
       }
 
       if (!existingProfile) {
@@ -155,10 +155,10 @@ function CreateProfile() {
           });
 
         if (insertError) {
-          throw new Error('No pudimos guardar tu perfil. Intenta de nuevo.');
+          throw new Error('No pudimos guardar tu perfil. Por favor, intenta de nuevo.');
         }
       } else {
-        setError('Ya tienes un perfil creado. Redirigiendo...');
+        setError('Ya tienes un perfil creado. Te estamos llevando a tu dashboard.');
         navigate('/dashboard');
         return;
       }
@@ -175,10 +175,9 @@ function CreateProfile() {
   return (
     <>
       <Navbar />
-      <section className="create-profile-section">
+      <section className="create-profile-section background">
         <div className="container vh-100 d-flex justify-content-center align-items-center">
           <div className="row w-75 shadow-lg bg-white rounded-4 overflow-hidden">
-            {/* Sección izquierda - Formulario */}
             <div className="col-md-7 p-5 create-profile-form-container">
               <h2 className="mb-4 text-center">Completa tu perfil</h2>
 
@@ -211,7 +210,7 @@ function CreateProfile() {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Pais</label>
+                  <label className="form-label">País</label>
                   <input
                     type="text"
                     className="form-control"
@@ -242,7 +241,6 @@ function CreateProfile() {
                     accept="image/*"
                     onChange={handleChange}
                   />
-                  
                 </div>
 
                 <div className="mb-3">
@@ -265,7 +263,6 @@ function CreateProfile() {
               </form>
             </div>
 
-            {/* Sección derecha - Texto "CREA TU PERFIL" y Logo */}
             <div className="col-md-5 d-flex flex-column align-items-center justify-content-center text-white create-profile-right-section">
               <h1 className="text-uppercase text-center fw-bold mb-4">¡Únete creando un perfil!</h1>
               <img src={logo} alt="Logo" className="create-profile-logo" />
