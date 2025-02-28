@@ -6,7 +6,7 @@
     import { useNavigate } from "react-router-dom";
     import Button from "react-bootstrap/Button";
     import ModalEditProfile from "../components/ModalEditProfile";
-    import "../styles/editProfile.css";
+    import "../style/editProfile.css";
 
     const EditProfile = () => {
     const [userData, setUserData] = useState({
